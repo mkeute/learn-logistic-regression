@@ -1,0 +1,21 @@
+---
+title: "Several Predictors"
+output: html_document
+runtime: shiny
+---
+So far, we have only considered the *bivariate* case, i.e., one target variable explained by one explanatory variable. The interpretation of regression weights generalizes to the case where we have more than one explanatory variable - at least as long as we do not consider interactions between different explanatory variables.
+
+> For a unit increase in one predictor, the LOR for the current sample to belong to class 1 increases by ${\hat{\beta}}$.
+
+If we run a model where all variables are used as explanatory variables for `sick`, we call:
+
+```
+model = glm(sick ~ BP_systolic + log_tcell + smoker + sex, family = binomial(link=logit), data = df)
+summary(model)
+```
+and obtain the output below. We can interpret each of the coefficients separately (e.g., check whether it is significantly different from zero), or we can combine the coefficients to predict the probability of `sick` for an unseen patient. If we know that the new patient is female, non-smoker, and has given values for `log_tcell` and `BP_systolic`, we just multiply these input values with the coefficients, add them all together, and add the intercept. The result of this addition will be the logOR for the new patient to be `sick`.
+
+>Note that all regression models make certain assumptions about the data. *In particular, it is important that the explanatory variables are mutually uncorrelated*, otherwise it is difficult to interpret the size of the single coefficients and make reliable predictions.
+
+
+**You can now try to go back to the second page, change the correlation between sickness and blood pressure, log_tcell, sex and smoking in the data, and observe how the regression weights change!**

@@ -1,0 +1,10 @@
+---
+title: "Intro"
+output: html_document
+runtime: shiny
+---
+Logistic Regression is an often-used method in empirical research. However, it can feel confusing to look at a Logistic Regression output table in a paper or your statistic software and try to make sense of the numbers. This tutorial app is here to help you get a better understanding.
+
+We start by creating a simple medical toy dataset. It contains 500 observations (patients) and six variables. We want to analyze the relationship between clinical global impression (CGI) on the one hand and log-t-cell count, systolic blood pressure, sex and smoking on the other hand. First, we will try to predict the value of CGI using *linear regression*. Next, we will threshold CGI (`sick` if smaller than 50, `not sick` if greater or equal than 50) and try to predict this new categorical variable using *logistic regression*.
+
+You can browse the data below to get a first impression. On the next page, you can manipulate the relationship between the variables in the data and see the effect graphically.

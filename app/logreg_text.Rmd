@@ -1,0 +1,38 @@
+---
+title: "Logistic Regression"
+output: html_document
+runtime: shiny
+---
+
+
+Now that we have understood linear regression, it is not too difficult to transfer our understanding to *logistic regression*. We construct a new example, the only difference to the previous one being that we now want to predict `sick` rather than CGI - that is to say, we want to predict whether or not a given person's CGI is below 50, rather than the exact value of CGI.
+
+On the previous page, we noted that the goal of linear regression is to *predict* or *explain* the relationship between variables, but we somewhat sloppily went over the difference between the two goals. *Explanation* refers to the data that we have - how can we quantify the relationship between the available values of **X** and **y**, and how does this relationship generalize to the population? *Prediction*, on the other hand, refers to the value of **y** that we expect for a previously unseen patient for whom we only know **X** but not **y**.
+
+While logistic regression clearly serves both *prediction* and *explanation*, it is easier to understand the concept when we think about it in terms of *prediction* first. The reason is that the output of logistic regression is a *probability*:
+
+The mathematical notation for logistic regression is: $P(Y_j=1) = logistic(\boldsymbol{X} \boldsymbol{\beta}) = \frac{1}{1+exp(-\boldsymbol{X} \boldsymbol{\beta})}$. The exponential part, the so-called *logistic function*, makes sure that the output of the model is always between 0 and 1, as it must be for probabilities. In a nutshell, the logistic regression model uses a linear combination of the predictor variables **X** with the regression weights, puts the result through the logistic function and outputs the probability that a patient with the given values on the predictor variables belongs to class 1 (in our example: `sick`). 
+
+At this point, it should become clear why it is easier to think about logistic regression in terms of *prediction* first - the probability output is, by its very nature, predictive. The **y** data that we have, on the other hand, is either 0 (not sick) or 1 (sick), and it is not very straightforward to think about it in terms of probabilities.
+
+The interpretation of a logistic regression weight is obviously different from a linear regression weight. We can use the fact that the log-odds ratio (logOR) is the inverse of the logistic function, i.e. instead of the formula above we could also have written: $logOR(Y_j=1) = \boldsymbol{X} \boldsymbol{\beta}$. The interpretation of the weights then becomes:
+
+> For a unit increase in the predictor, the logOR for the current sample to belong to class 1 increases by ${\hat{\beta}}$.
+
+If the predictor is categorical rather than continuous (e.g., sex, where `male` is coded with `0` and `female` is coded with `1`):
+
+> For the category coded with `1` (`female`), the logOR to belong to class 1 is higher by ${\hat{\beta}}$.
+
+Note that no units are involved here, since logOR is a unitless quantity.
+
+
+**You can now try to go back to the second page, change the correlation between sickness and blood pressure in the data, and observe how the regression weight changes!**
+
+When you use R to perform logistic regression, you usually want to call the `glm` function and assign the resulting model to a variable. You then call the `summary` function again and get a similar output table back, containing an estimate and a quantification of estimation uncertainty for each predictor's regression weight.
+
+The fitting algorithm for logistic regression is a bit more involved than the one for linear regression - we do not have a direct equivalent of residuals that we can minimize, therefore least-squares fitting as for linear regression is not applicable.
+
+```
+model = glm(sick ~ BP_systolic, family = binomial(link=logit), data = df)
+summary(model)
+```

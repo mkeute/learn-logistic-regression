@@ -1,0 +1,32 @@
+---
+title: "Linear Regression Recap"
+output: html_document
+runtime: shiny
+---
+
+
+The goal of Linear Regression is to express the relationship between several variables by a *linear equation*. Usually, we have one (metric) *target variable* **y** on the left-hand side of the equation, containing data from *n units* (e.g., persons), and we want to *explain or predict* **y** by **p** (metric or categorical) *explanatory variables* **X**.
+
+In the example below, **y** corresponds to *CGI* and **X** corresponds to *Blood Pressure*, i.e., we have only one explanatory variable.
+We can express the model mathematically like so: $\mathbf{\hat{y}} =  \mathbf{X} \boldsymbol{{\hat{\beta}}}$, where $\boldsymbol{{\hat{\beta}}}$ is a vector of *regression weights* (in our example, there is only one relevant weight, since both variables have been normalized.) 
+
+Note the *hat* over $\boldsymbol{\hat{y}}$ and $\boldsymbol{{\hat{\beta}}}$. It stands for *estimate*. It is there because $\boldsymbol{{\hat{\beta}}}$ is unknown, and the whole purpose of linear regression is to *estimate* it. **X** and **y**, on the other hand, are known, but **y** still has a hat, because the linear equation will usually not be solvable for real-world data. That is to say, **y** cannot be perfectly reconstructed as a linear combination of the variables in **X**, so we will make a *prediction error*. The regression model creates the best possible reconstruction of **y** as a linear combination of **X** - but it usually cannot create **y** itself from **X**.
+
+The part of **y** that cannot be explained by **X** is called *prediction error* or *residuals*: $\epsilon := \mathbf{y} - \mathbf{\hat{y}}$. In the plot below, we try out different regression weights $\boldsymbol{\beta}$, corresponding to the slope of the regression line. The vertical, red dashed lines are the residuals. It turns out that the optimal regression weight $\boldsymbol{\hat{y}}$ is the one that minimizes the *mean of the squared residuals*. We can find the optimal regression weights by trial and error, as in the plot, but Linear Regression can also be solved analytically, which makes the computation a lot faster.
+
+The interpretation of a regression weight is straightforward, at least as long as there is only one predictor and one regression weight:
+
+> For a unit increase in the predictor, we can expect ${\hat{\beta}}$ units increase in the target variable.
+
+If the predictor is categorical rather than continuous (e.g., sex, where `male` is coded with `0` and `female` is coded with `1`):
+
+> For the category coded with `1` (`female`), the target variable is expected to be ${\hat{\beta}}$ units higher.
+
+**You can now try to go back one page, change the correlation between CGI and blood pressure in the data, and observe how the regression weight changes!**
+
+When you use R to perform linear regression, you usually want to call the `lm` function and assign the resulting model to a variable. You then call the `summary` function and get an output table back, like the one shown below. Typically the most interesting part is the `Coefficients` table. It contains, for each predictor and an Intercept term, the regression weight (in column `Estimate`). In addition, it contains information about the *estimation uncertainty* that is captured by the `Std. Error`, `t value`, and `Pr(>|t|)`. The last column quantifies the *significance* of the estimate - i.e., if the value is smaller than some threshold, often set to 0.05, we can say with some confidence that the true regression weight is different from zero.
+
+```
+model = lm(CGI ~ BP_systolic, data = df)
+summary(model)
+```
